@@ -10,14 +10,14 @@ import pandas as pd
 # Fetch dataset 
 student_performance = fetch_ucirepo(id=320)
 
-# Data (as pandas dataframes)
+# Data
 X = student_performance.data.features 
 y = student_performance.data.targets 
 
 # Splitting the data into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Select categorical columns (you may need to adjust this based on your dataset)
+# Select categorical columns
 categorical_cols = [col for col in X_train.columns if X_train[col].dtype == "object"]
 
 # Preprocessing for categorical data
@@ -43,20 +43,20 @@ y_pred = lr.predict(X_test)
 
 mae = mean_absolute_error(y_test, y_pred)
 mse = mean_squared_error(y_test, y_pred)
-rmse = mean_squared_error(y_test, y_pred, squared=False)  # RMSE
+rmse = mean_squared_error(y_test, y_pred, squared=False)
 
-# Assuming 'lr' is your trained model and 'categorical_cols' contains the names of categorical columns
+# 'lr' trained model and 'categorical_cols' contains the names of categorical columns
 categorical_feature_names = lr.named_steps['preprocessor'].named_transformers_['cat']\
                                 .named_steps['onehot'].get_feature_names_out(input_features=categorical_cols)
 
 # Get coefficients after the model is trained
 lr_model = lr.named_steps['regressor']
-coefficients = lr_model.coef_[0]  # Extract coefficients for the first target (if using multi-output regression)
+coefficients = lr_model.coef_[0]
 
-# Create a DataFrame to display coefficients with their corresponding feature names
+# DataFrame to display coefficients with their corresponding feature names
 coef_df = pd.DataFrame({'Feature': categorical_feature_names, 'Coefficient': coefficients})
 
-# Display coefficients
+# coefficients
 print(coef_df)
 
 data = {
